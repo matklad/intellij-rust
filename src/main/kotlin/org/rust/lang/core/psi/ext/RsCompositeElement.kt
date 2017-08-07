@@ -11,23 +11,15 @@ import com.intellij.lang.ASTNode
 import com.intellij.psi.PsiElement
 import com.intellij.psi.stubs.IStubElementType
 import com.intellij.psi.stubs.StubElement
-import com.intellij.psi.util.PsiTreeUtil
 import org.rust.cargo.project.workspace.CargoWorkspace
 import org.rust.cargo.project.workspace.cargoWorkspace
 import org.rust.lang.core.psi.RsFile
-import org.rust.lang.core.psi.RsModDeclItem
 import org.rust.lang.core.resolve.ref.RsReference
 
 interface RsCompositeElement : PsiElement {
     override fun getReference(): RsReference?
 }
 
-val RsCompositeElement.containingMod: RsMod?
-    get() = PsiTreeUtil.getStubOrPsiParentOfType(this, RsMod::class.java)
-
-val RsModDeclItem.containingMod: RsMod
-    get() = (this as RsCompositeElement).containingMod
-        ?: error("Rust mod decl outside of a module")
 
 val RsCompositeElement.crateRoot: RsMod? get() {
     return if (this is RsFile) {
